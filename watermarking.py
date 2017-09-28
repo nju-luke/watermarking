@@ -73,10 +73,12 @@ class watermarking():
         img_rec = self.recover("img")
         cv2.imwrite(path_save, img_rec)
 
-    def extracted(self, image_path=None):
+    def extracted(self, image_path=None,extracted_watermark_path = None):
         '''
         Extracted the watermark from the given image.
         '''
+        if not extracted_watermark_path:
+            extracted_watermark_path = "watermark_extracted.jpg"
         if not image_path:
             image_path = self.path_save
         img = cv2.imread(image_path,0)
@@ -85,7 +87,7 @@ class watermarking():
         img_components.Coefficients, img_components.U, img_components.S, img_components.V = self.calculate(img)
         self.S_W = (img_components.S - self.img_components.S) / self.ratio
         watermark_extracted = self.recover("W")
-        cv2.imwrite("watermark_extracted.jpg", watermark_extracted)
+        cv2.imwrite(extracted_watermark_path, watermark_extracted)
 
     def embed(self):
         self.S_img = self.img_components.S + self.ratio * self.W_components.S * \
