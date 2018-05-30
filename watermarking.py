@@ -16,7 +16,13 @@ class Components():
 
 
 class watermarking():
-    def __init__(self, watermark_path="watermarking.jpg", ratio=0.1, wavelet="haar",
+    """
+    :param watermark_path:
+    :param ratio:
+    :param wavelet:
+    :param level:
+    """
+    def __init__(self, watermark_path="watermark.jpg", ratio=0.1, wavelet="haar",
                  level=2):
         self.level = level
         self.wavelet = wavelet
@@ -73,7 +79,7 @@ class watermarking():
         img_rec = self.recover("img")
         cv2.imwrite(path_save, img_rec)
 
-    def extracted(self, image_path=None,extracted_watermark_path = None):
+    def extracted(self, image_path=None, ratio=None, extracted_watermark_path = None):
         '''
         Extracted the watermark from the given image.
         '''
@@ -85,7 +91,8 @@ class watermarking():
         img = cv2.resize(img, self.shape_watermark)
         img_components = Components()
         img_components.Coefficients, img_components.U, img_components.S, img_components.V = self.calculate(img)
-        self.S_W = (img_components.S - self.img_components.S) / self.ratio
+        ratio_ = self.ratio if not ratio else ratio
+        self.S_W = (img_components.S - self.img_components.S) / ratio_
         watermark_extracted = self.recover("W")
         cv2.imwrite(extracted_watermark_path, watermark_extracted)
 
@@ -95,6 +102,6 @@ class watermarking():
 
 
 if __name__ == '__main__':
-    watermarking = watermarking()
+    watermarking = watermarking(level=3)
     watermarking.watermark()
     watermarking.extracted()
